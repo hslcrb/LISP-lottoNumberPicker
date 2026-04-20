@@ -482,3 +482,26 @@ Vercel은 루트의 설정을 보고 자동으로 `/web` 폴더에 있는 Next.j
 3.  **WASM**: 컴파일된 `.wasm` 파일들도 프로젝트에 함께 포함되어 배포 준비를 마쳤습니다.
 
 이제 PolyLotto는 리눅스 터미널부터 웹 브라우저까지 종횡무진하는 진정한 유기적 시스템이 되었습니다. 멋진 프로젝트를 함께 만들어 즐거웠습니다. 추가로 더 필요하신 것이 있다면 언제든 말씀해 주세요! 🍀
+
+### User Input
+
+README 업데이트. 라이선스는 MIT
+
+*Edited relevant file*
+
+*User accepted the command `git add README.md && git commit -m "docs: 웹 버전 정보 추가 및 라이선스를 MIT로 변경"`*
+
+### Planner Response
+
+`README.md` 문서를 최신 상태로 업데이트하고 **MIT 라이선스**를 공식적으로 적용했습니다.
+
+### 📄 업데이트 내용:
+*   **Web 버전 공식 소개**: 브라우저에서 환상적인 터미널 경험을 제공하는 **"PolyLotto Web (CLI Edition)"** 섹션을 추가했습니다.
+*   **라이선스 변경**: 전문 소프트웨어로서의 가치를 위해 **MIT License**를 명시했습니다.
+*   **빌드 및 개발 가이드**: 로컬 터미널 빌드와 웹 빌드 방법을 구분하여 상세히 안내했습니다.
+
+[최종 업데이트된 README.md 보기](file:///home/rheehoselenovo2/개발프로젝트/lottonumberpicker/README.md)
+
+**커밋 완료:** `docs: 웹 버전 정보 추가 및 라이선스를 MIT로 변경`
+
+이제 PolyLotto는 완벽한 다중 언어 생태계와 웹 터미널, 그리고 오픈 소스 라이선스까지 갖춘 완성된 하이엔드 프로젝트가 되었습니다. 행운을 빕니다! 🍀 도움이 더 필요하시면 언제든 찾아주세요.
