@@ -1,0 +1,11 @@
+bin/
+src/core/
+src/engine/
+src/reporter/
+src/stats/
+src/orchestrator/
+Makefile
+lotto
+test_lotto.txt
+.git
+.gemini
