@@ -1,47 +1,136 @@
 #!/usr/bin/sbcl --script
 ;; lotto.lisp
-;; CLI 로또 번호 추첨기
+;; 고급 CLI 로또 번호 추첨기 (고정수, 제외수, 색상 출력, 파일 저장, 시뮬레이션 지원)
 
-;; 랜덤 시드를 현재 시간에 맞춰 초기화합니다.
 (setf *random-state* (make-random-state t))
 
-(defun generate-lotto ()
-  "1부터 45까지의 숫자 중 중복되지 않는 6개의 숫자를 뽑아 정렬합니다."
-  (let ((nums '()))
-    (loop while (< (length nums) 6) do
-      (pushnew (1+ (random 45)) nums))
-    (sort (copy-list nums) #'<)))
+;; --- ANSI 색상 상수 ---
+(defparameter *color-reset*  (format nil "~C[0m" #\Esc))
+(defparameter *color-yellow* (format nil "~C[33m" #\Esc)) ; 1-10
+(defparameter *color-blue*   (format nil "~C[34m" #\Esc)) ; 11-20
+(defparameter *color-red*    (format nil "~C[31m" #\Esc)) ; 21-30
+(defparameter *color-gray*   (format nil "~C[90m" #\Esc)) ; 31-40
+(defparameter *color-green*  (format nil "~C[32m" #\Esc)) ; 41-45
+(defparameter *color-bold*   (format nil "~C[1m" #\Esc))
 
-(defun print-lotto-sets (count)
-  "지정된 게임 수만큼 로또 번호를 출력합니다."
-  (format t "~%--- 🍀 로또 번호 추첨 (총 ~D게임) 🍀 ---~%" count)
-  (dotimes (i count)
-    ;; ~{~2,'0D ~} 를 통해 1자리 숫자는 앞에 0을 붙여 출력하도록 포맷팅합니다.
-    (format t "[게임 ~D]  ~{~2,'0D ~}~%" (1+ i) (generate-lotto)))
-  (format t "-------------------------------------------~%~%"))
+(defun get-color-for-num (num)
+  "번호 대역에 따른 색상 코드를 반환합니다."
+  (cond ((<= num 10) *color-yellow*)
+        ((<= num 20) *color-blue*)
+        ((<= num 30) *color-red*)
+        ((<= num 40) *color-gray*)
+        (t           *color-green*)))
+
+(defun format-num-with-color (num)
+  "숫자에 색상을 입혀 문자열로 변환합니다."
+  (format nil "~A~2,'0D~A" (get-color-for-num num) num *color-reset*))
+
+;; --- 유틸리티 ---
+
+(defun split-str (str separator)
+  "문자열을 구분자로 분리합니다."
+  (let ((result '())
+        (last 0))
+    (loop for i from 0 below (length str) do
+          (when (char= (char str i) separator)
+            (push (subseq str last i) result)
+            (setf last (1+ i))))
+    (push (subseq str last) result)
+    (nreverse result)))
+
+(defun split-by-comma (str)
+  "쉼표 또는 공백으로 된 문자열을 숫자 리스트로 변환합니다."
+  (when (and str (not (string= str "")))
+    (let* ((p1 (split-str str #\,))
+           (parts (loop for p in p1 append (split-str p #\Space))))
+      (mapcar #'parse-integer 
+              (remove-if (lambda (s) 
+                           (or (string= s "") 
+                               (not (every #'digit-char-p s))))
+                         parts)))))
+
+;; --- 코어 로직 ---
+
+(defun generate-lotto (&key fixed exclude)
+  "지정된 고정수와 제외수를 고려하여 6개의 번호를 생성합니다."
+  (let ((nums (copy-list fixed))
+        (pool '()))
+    (loop for i from 1 to 45 do
+          (unless (member i (append fixed exclude))
+            (push i pool)))
+    (loop while (< (length nums) 6) do
+          (let ((picked (nth (random (length pool)) pool)))
+            (setf pool (remove picked pool))
+            (push picked nums)))
+    (sort nums #'<)))
+
+(defun check-rank (picked winning)
+  (let ((matches (length (intersection picked winning))))
+    (cond ((= matches 6) "1등! 🎉")
+          ((= matches 5) "3등!")
+          ((= matches 4) "4등")
+          ((= matches 3) "5등")
+          (t "꽝"))))
+
+;; --- 메인 인터페이스 ---
+
+(defun print-help ()
+  (format t "사용법: ./lotto.lisp [옵션]~%~%")
+  (format t "옵션:~%")
+  (format t "  -c, --count N        게임 수~%")
+  (format t "  -f, --fixed N,M...   고정수~%")
+  (format t "  -e, --exclude N,M... 제외수~%")
+  (format t "  -s, --save PATH      파일 저장~%")
+  (format t "  -m, --simulate N,M.. 당첨 번호~%")
+  (format t "  -i, --interactive    대화형 모드~%"))
+
+(defun interactive-mode ()
+  (format t "--- 🍀 대화형 로또 생성기 🍀 ---~%")
+  (format t "몇 게임? (기본 1): ") (finish-output)
+  (let ((count (or (parse-integer (read-line) :junk-allowed t) 1)))
+    (format t "고정수 (쉼표 구분): ") (finish-output)
+    (let ((fixed (split-by-comma (read-line))))
+      (format t "제외수 (쉼표 구분): ") (finish-output)
+      (let ((exclude (split-by-comma (read-line))))
+        (list :count count :fixed fixed :exclude exclude)))))
 
 (defun main ()
-  "명령줄 인수를 파싱하여 로또 게임 수를 결정하고 실행합니다."
-  (let* ((all-args #+sbcl sb-ext:*posix-argv*
-                   #+clisp ext:*args*
-                   #+ecl (ext:command-args)
-                   #+ccl ccl:*command-line-argument-list*
-                   #-(or sbcl clisp ecl ccl) nil)
-         ;; 스크립트로 실행할 경우 첫 번째 인수는 스크립트 이름이므로 제외합니다.
-         (args (cdr all-args))
-         (count 1))
+  (let ((args (cdr sb-ext:*posix-argv*))
+        (count 1) (fixed '()) (exclude '()) (save-path nil) (winning nil) (interactive nil))
     
-    (cond
-      ((member "-h" args :test #'string=)
-       (format t "사용법: ./lotto.lisp [게임_수]~%예: ./lotto.lisp 5 (5게임 생성)~%"))
-      ((member "--help" args :test #'string=)
-       (format t "사용법: ./lotto.lisp [게임_수]~%예: ./lotto.lisp 5 (5게임 생성)~%"))
-      (t
-       (loop for arg in args do
-             (let ((parsed (parse-integer arg :junk-allowed t)))
-               (when (and parsed (> parsed 0))
-                 (setf count parsed))))
-       (print-lotto-sets count)))))
+    (loop while args do
+      (let ((arg (pop args)))
+        (cond
+          ((member arg '("-h" "--help") :test #'string=) (print-help) (sb-ext:exit))
+          ((member arg '("-i" "--interactive") :test #'string=) (setf interactive t))
+          ((member arg '("-c" "--count") :test #'string=) (setf count (parse-integer (pop args))))
+          ((member arg '("-f" "--fixed") :test #'string=) (setf fixed (split-by-comma (pop args))))
+          ((member arg '("-e" "--exclude") :test #'string=) (setf exclude (split-by-comma (pop args))))
+          ((member arg '("-s" "--save") :test #'string=) (setf save-path (pop args)))
+          ((member arg '("-m" "--simulate") :test #'string=) (setf winning (split-by-comma (pop args))))
+          ((parse-integer arg :junk-allowed t) (setf count (parse-integer arg))))))
 
-;; 실행
+    (when (or interactive (and (not args) (= count 1) (null fixed) (null exclude) (null save-path) (null winning) (null (cdr sb-ext:*posix-argv*))))
+      (let ((params (interactive-mode)))
+        (setf count (getf params :count) fixed (getf params :fixed) exclude (getf params :exclude))))
+
+    (let ((output '()))
+      (format t "~%--- 🍀 로또 번호 추첨 (~D게임) ---~%" count)
+      (dotimes (i count)
+        (let* ((lotto (generate-lotto :fixed fixed :exclude exclude))
+               (colored (format nil "[게임 ~D]  ~{~A ~}" (1+ i) (mapcar #'format-num-with-color lotto)))
+               (plain (format nil "[게임 ~D]  ~{~2,'0D ~}" (1+ i) lotto)))
+          (if winning
+              (let ((rank (check-rank lotto winning)))
+                (format t "~A (~A)~%" colored rank)
+                (push (format nil "~A (~A)" plain rank) output))
+              (progn
+                (format t "~A~%" colored)
+                (push plain output)))))
+      
+      (when save-path
+        (with-open-file (s save-path :direction :output :if-exists :supersede :if-does-not-exist :create)
+          (dolist (line (reverse output)) (write-line line s)))
+        (format t "~%✅ ~A 에 저장 완료.~%" save-path)))))
+
 (main)
