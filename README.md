@@ -18,6 +18,19 @@ PolyLotto는 컴퓨터 공학의 역사를 관통하는 5가지 서로 다른 �
 | **FORTRAN** | **Analyzer** | **이성 (Mind)** | 수치 해석 및 통계 분석 (평균, 빈도 등) |
 | **COBOL** | **Reporter** | **목소리 (Voice)** | 비즈니스 스타일의 공식 보고서(XML/Text) 생성 |
 
+### 📊 데이터 관계도 (Entity Relationship Diagram)
+
+```mermaid
+erDiagram
+    LISP_Orchestrator ||--|| C_Core : "triggers"
+    LISP_Orchestrator ||--|| CPP_Engine : "coordinates"
+    C_Core ||--o| CPP_Engine : "raw_numbers"
+    CPP_Engine |o--|| FORTRAN_Stats : "formatted_data"
+    FORTRAN_Stats |o--|| COBOL_Reporter : "analysis_results"
+    COBOL_Reporter ||--|| User : "final_report"
+```
+
+
 ---
 
 ## 🌐 PolyLotto Web (Zero-UI CLI Edition)
@@ -86,5 +99,8 @@ lotto -i
 
 ---
 
-## 📜 라이선스
+## 📜 라이선스 (License)
+
+Copyright (c) 2008 - 2026 Rheehose (Rhee Creative).
 이 프로젝트는 **MIT License**에 따라 자유롭게 사용할 수 있습니다. 🍀
+

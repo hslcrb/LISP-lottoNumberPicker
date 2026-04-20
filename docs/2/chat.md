@@ -208,3 +208,26 @@ feat: fix Vercel build error by disabling SSR for Terminal and updating xterm pa
 - **주요 수정 사항**: `Terminal` 컴포넌트의 SSR 비활성화 및 `@xterm` 스코프 패키지로의 전환.
 
 이제 프로젝트가 Vercel에서 빌드 에러 없이 정상적으로 배포될 준비가 되었습니다. Vercel 대시보드에서 새로운 배포를 확인해 보시기 바랍니다! 🍀 추가로 더 궁금하거나 필요한 작업이 있으시면 말씀해 주세요.
+
+### User Input
+
+README를 편집하라. 그리고 LICENSE 파일을 만들어라. MIT 라이선스. 다음과 같이 그대로 카피라이트 구문 하라. Rheehose (Rhee Creative) 2008 - 2026 으로 하라. 그리고 merirdERD도 넣어라.
+
+*Edited relevant file*
+
+*Viewed [README.md](file:///home/rheehoselenovo2/%EA%B0%9C%EB%B0%9C%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8/lottonumberpicker/README.md) *
+
+*Edited relevant file*
+
+### Planner Response
+
+요청하신 작업을 모두 완료했습니다.
+
+1.  **LICENSE 파일 생성**: 루트 디렉토리에 **MIT 라이선스** 파일을 생성하였으며, 저작권 문구를 지정하신 대로 `Copyright (c) 2008 - 2026 Rheehose (Rhee Creative)`로 설정했습니다.
+2.  **README.md 업데이트**:
+    *   **Mermaid ERD 추가**: 시스템 아키텍처 하단에 5가지 언어 모듈 간의 유기적인 데이터 흐름을 시각화한 **데이터 관계도(Entity Relationship Diagram)**를 추가했습니다.
+    *   **라이선스 섹션 강화**: 하단 라이선스 정보에 저작권 문구를 명시했습니다.
+
+[LICENSE 확인](file:///home/rheehoselenovo2/개발프로젝트/lottonumberpicker/LICENSE) | [README.md 확인](file:///home/rheehoselenovo2/개발프로젝트/lottonumberpicker/README.md)
+
+이제 PolyLotto 프로젝트는 법적 보호와 아키텍처 가독성을 모두 갖춘 완성도 높은 오픈 소스 구성을 갖추게 되었습니다! 🍀 추가로 더 필요하신 작업이 있으신가요?
