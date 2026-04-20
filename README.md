@@ -2,6 +2,8 @@
 
 PolyLotto는 컴퓨터 공학의 역사를 관통하는 5가지 서로 다른 언어(C, C++, Lisp, FORTRAN, COBOL)가 각자의 강점을 발휘하며 하나의 유기체처럼 소통하는 전문 로또 분석 및 생성 소프트웨어 스위트입니다.
 
+이제 터미널을 넘어 웹 브라우저에서도 **제로 UI(CLI 전용)** 환경으로 PolyLotto의 강력한 기능을 경험할 수 있습니다.
+
 ---
 
 ## 🏗️ 시스템 아키텍처 (Architecture)
@@ -18,6 +20,16 @@ PolyLotto는 컴퓨터 공학의 역사를 관통하는 5가지 서로 다른 �
 
 ---
 
+## 🌐 PolyLotto Web (Zero-UI CLI Edition)
+
+웹 버전은 일반적인 웹사이트의 틀을 완전히 벗어나, 브라우저 전체를 **가상 터미널**로 사용하여 실제 CLI 환경을 완벽하게 재현합니다.
+
+- **기본 URL**: Vercel 배포 시 생성된 URL
+- **특징**: 아무런 UI 요소 없이 오직 터미널 입력을 통해서만 동작하는 '미니멀리즘'의 극치
+- **기술**: Next.js + xterm.js + WebAssembly (WASM) 기반 시뮬레이션
+
+---
+
 ## 🚀 시작하기 (Getting Started)
 
 ### 사전 요구 사항
@@ -26,57 +38,53 @@ PolyLotto는 컴퓨터 공학의 역사를 관통하는 5가지 서로 다른 �
 - `gcc` / `g++` (C / C++)
 - `gfortran` (FORTRAN)
 - `cobc` (GnuCOBOL)
-- `make` (Build Tool)
+- `emcc` (Emscripten - 웹 버전 빌드용)
+- `make` 및 `node/npm`
 
-### 설치 및 빌드
+### 로컬 빌드 및 실행
 ```bash
-# 저장소 복제 후 폴더 진입
-git clone <repository_url>
-cd lottonumberpicker
-
 # 모든 모듈 컴파일
 make all
+
+# 로컬 실행
+./lotto -c 5
+```
+
+### 웹 버전 로컬 개발
+```bash
+cd web
+npm install
+npm run dev
 ```
 
 ---
 
-## 🛠️ 사용 방법 (Usage)
+## 🛠️ 주요 명령어 (Commands)
 
-루트 폴더의 `lotto` 명령어를 사용하여 시스템을 구동합니다.
+로컬 터미널과 웹 터미널 모두 아래 명령어를 동일하게 사용합니다.
 
-### 기본 실행
 ```bash
 # 5게임 생성 및 분석 리포트 출력
-./lotto -c 5
-```
+lotto -c 5
 
-### 다양한 데이터 포맷 출력
-```bash
-# JSON 형식으로 결과 출력
-./lotto -c 10 --json
+# JSON 또는 XML 형식으로 결과 출력
+lotto -c 10 --json
+lotto -c 5 --xml
 
-# XML 형식으로 결과 출력
-./lotto -c 5 --xml
-```
-
-### 대화형 모드
-```bash
-# 사용자 입력을 통한 단계별 설정
-./lotto -i
+# 대화형 설정 모드
+lotto -i
 ```
 
 ---
 
 ## 📂 프로젝트 구조 (Project Structure)
-- `src/orchestrator/`: Lisp 메인 제어 로직
-- `src/core/`: C 기반 고속 난수 생성기
-- `src/engine/`: C++ 비즈니스 로직 및 포맷터
-- `src/stats/`: FORTRAN 기반 통계 분석 모듈
-- `src/reporter/`: COBOL 기반 결과 리포터
+- `src/`: 언어별 소스 코드 (Core, Engine, Orchestrator, Reporter, Stats)
+- `web/`: Next.js 기반 웹 터미널 프로젝트
 - `bin/`: 컴파일된 실행 파일 저장 경로
 - `include/`: 공용 헤더 파일
+- `vercel.json`: Vercel 배포 설정 파일
 
 ---
 
 ## 📜 라이선스
-이 프로젝트는 교육 및 재미를 목적으로 제작되었습니다. 자유롭게 사용하고 기여해 주세요! 🍀
+이 프로젝트는 **MIT License**에 따라 자유롭게 사용할 수 있습니다. 🍀
