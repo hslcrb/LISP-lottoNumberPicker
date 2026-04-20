@@ -190,3 +190,21 @@ Vercel 빌드 실패의 원인을 찾아 해결했습니다.
 ```bash
 feat: fix Vercel build error by disabling SSR for Terminal and updating xterm packages
 ```
+
+### User Input
+
+커밋하라.
+
+*User accepted the command `git add web/src/app/page.tsx web/src/components/Terminal.tsx web/package.json web/package-lock.json && git commit -m "fix: Vercel 빌드 오류 수정 (Terminal SSR 비활성화 및 xterm 패키지 업데이트)"`*
+
+*User accepted the command `git status`*
+
+### Planner Response
+
+성공적으로 커밋을 마쳤습니다. 
+
+**[커밋 완료]**
+- **메시지**: `fix: Vercel 빌드 오류 수정 (Terminal SSR 비활성화 및 xterm 패키지 업데이트)`
+- **주요 수정 사항**: `Terminal` 컴포넌트의 SSR 비활성화 및 `@xterm` 스코프 패키지로의 전환.
+
+이제 프로젝트가 Vercel에서 빌드 에러 없이 정상적으로 배포될 준비가 되었습니다. Vercel 대시보드에서 새로운 배포를 확인해 보시기 바랍니다! 🍀 추가로 더 궁금하거나 필요한 작업이 있으시면 말씀해 주세요.
